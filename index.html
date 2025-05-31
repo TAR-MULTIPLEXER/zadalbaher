@@ -15,7 +15,7 @@
       text-align: center;
       margin-bottom: 40px;
       font-size: 2.5em;
-      color: #e76f51;
+      color: yellow;
     }
 
     .menu-section {
@@ -53,23 +53,18 @@
 <body>
 
   <h1>Zad Al Baher - Restaurant Menu</h1>
-
   <div id="menu"></div>
 
   <script>
-    function prettifyCategory(str) {
-      return str.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-    }
+    async function loadMenu() {
+      const res = await fetch('https://yourusername.github.io/yourrepo/menu.json'); 
+      const menuItems = await res.json();
 
-    function loadMenu() {
-      const stored = localStorage.getItem('menuItems');
-      const menuItems = stored ? JSON.parse(stored) : [];
-
-      const grouped = menuItems.reduce((acc, item) => {
-        acc[item.category] = acc[item.category] || [];
-        acc[item.category].push(item);
-        return acc;
-      }, {});
+      const grouped = {};
+      menuItems.forEach(item => {
+        grouped[item.category] = grouped[item.category] || [];
+        grouped[item.category].push(item);
+      });
 
       const menuContainer = document.getElementById('menu');
       menuContainer.innerHTML = '';
@@ -96,9 +91,11 @@
       }
     }
 
-    // Load menu every 2 seconds so changes appear instantly
-    setInterval(loadMenu, 2000);
-    loadMenu(); // First load
+    function prettifyCategory(str) {
+      return str.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+
+    loadMenu();
   </script>
 </body>
 </html>

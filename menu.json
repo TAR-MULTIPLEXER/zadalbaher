@@ -8,9 +8,9 @@
   },
   {
     "id": 2,
-    "category": "salad",
-    "name": "Caesar Salad",
-    "description": "Classic Caesar salad with croutons and parmesan",
-    "price": 12.00
+    "category": "main-course",
+    "name": "Grilled Salmon",
+    "description": "Salmon fillet grilled to perfection",
+    "price": 25.00
   }
 ]

@@ -35,11 +35,16 @@
 
   <div id="items-list"></div>
 
-  <script>
-    let menuItems = JSON.parse(localStorage.getItem('menuItems')) || [];
+  <button onclick="exportArray()">Export Updated Array</button>
+  <pre id="output" style="margin-top: 20px;"></pre>
 
-    function saveData() {
-      localStorage.setItem('menuItems', JSON.stringify(menuItems));
+  <script>
+    let menuItems = [];
+
+    async function loadDemoData() {
+      const res = await fetch('menu.json'); // Local copy only (for testing)
+      menuItems = await res.json();
+      renderList();
     }
 
     function renderList() {
@@ -72,7 +77,6 @@
     function deleteItem(id) {
       if (confirm("Are you sure?")) {
         menuItems = menuItems.filter(i => i.id !== id);
-        saveData();
         renderList();
       }
     }
@@ -87,14 +91,12 @@
       const price = parseFloat(document.getElementById('price').value);
 
       if (id) {
-        // Edit existing item
         const item = menuItems.find(i => i.id === id);
         item.category = category;
         item.name = name;
         item.description = description;
         item.price = price;
       } else {
-        // Add new item
         menuItems.push({
           id: Date.now(),
           category,
@@ -104,9 +106,9 @@
         });
       }
 
-      saveData();
       renderList();
       clearForm();
+      exportArray();
     });
 
     function clearForm() {
@@ -114,17 +116,19 @@
       document.getElementById('edit-id').value = '';
     }
 
-    // Initial load
-    renderList();
-  </script>
-  <button onclick="exportArray()">Export Updated Menu</button>
-<pre id="output"></pre>
+    function exportArray() {
+      const output = document.getElementById('output');
+      output.textContent = JSON.stringify(menuItems, null, 2);
+    }
 
-<script>
-function exportArray() {
-  const output = document.getElementById('output');
-  output.textContent = JSON.stringify(menuItems, null, 2);
-}
-</script>
+    // Load demo data (only for local use)
+    window.onload = () => {
+      menuItems = [
+        { id: 1, category: 'salad', name: 'Salmon Kale', description: 'A healthy salad with salmon and kale', price: 15.00 },
+        { id: 2, category: 'main-course', name: 'Grilled Salmon', description: 'Salmon fillet grilled to perfection', price: 25.00 }
+      ];
+      renderList();
+    };
+  </script>
 </body>
 </html>
